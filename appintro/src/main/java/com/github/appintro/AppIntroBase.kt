@@ -108,8 +108,8 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
     private var currentlySelectedItem = -1
     private val fragments: MutableList<Fragment> = mutableListOf()
 
-    private lateinit var nextButton: View
-    private lateinit var doneButton: View
+    public lateinit var nextButton: View
+    public lateinit var doneButton: View
     private lateinit var skipButton: View
     private lateinit var backButton: View
     private lateinit var indicatorContainer: ViewGroup
@@ -148,6 +148,10 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
             pager.offscreenPageLimit = fragments.size
         }
         pagerAdapter.notifyDataSetChanged()
+    }
+
+    protected fun setOffScreenPageLimitMaxSize() {
+        pager.offscreenPageLimit = fragments.size
     }
 
     /**
