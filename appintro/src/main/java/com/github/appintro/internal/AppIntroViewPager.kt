@@ -157,22 +157,23 @@ internal class AppIntroViewPager(context: Context, attrs: AttributeSet) : ViewPa
                 if (event.action == MotionEvent.ACTION_UP) {
                     performClick()
                 }
-                val canRequestNextPage = onNextPageRequestedListener?.onCanRequestNextPage() ?: true
-
                 // If user can't request the page, we shortcircuit the ACTION_MOVE logic here.
                 // We need to return false if we detect that the user swipes forward,
                 // and also call onIllegallyRequestedNextPage if the threshold was too high
                 // (so the user can be informed).
-                if (!canRequestNextPage && isSwipeForward(currentTouchDownX, event.x)) {
-                    if (userIllegallyRequestNextPage(event)) {
-                        onNextPageRequestedListener?.onIllegallyRequestedNextPage()
+                if (isSwipeForward(currentTouchDownX, event.x)) {
+                    val canRequestNextPage = onNextPageRequestedListener?.onCanRequestNextPage() ?: true
+                    if (!canRequestNextPage) {
+                        if (userIllegallyRequestNextPage(event)) {
+                            onNextPageRequestedListener?.onIllegallyRequestedNextPage()
+                        }
+                        return false
                     }
-                    return false
-                }
 
-                // If the slide contains permissions, check for forward swipe.
-                if (isPermissionSlide && isSwipeForward(currentTouchDownX, event.x)) {
-                    onNextPageRequestedListener?.onUserRequestedPermissionsDialog()
+                    // If the slide contains permissions, check for forward swipe.
+                    if (isPermissionSlide) {
+                        onNextPageRequestedListener?.onUserRequestedPermissionsDialog()
+                    }
                 }
             }
         }

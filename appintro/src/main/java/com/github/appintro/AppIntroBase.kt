@@ -108,8 +108,8 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
     private var currentlySelectedItem = -1
     private val fragments: MutableList<Fragment> = mutableListOf()
 
-    public lateinit var nextButton: View
-    public lateinit var doneButton: View
+    lateinit var nextButton: View
+    lateinit var doneButton: View
     private lateinit var skipButton: View
     private lateinit var backButton: View
     private lateinit var indicatorContainer: ViewGroup
