@@ -1,6 +1,6 @@
 # AppIntro
 
-[![](https://jitpack.io/v/AppIntro/AppIntro.svg)](https://jitpack.io/#AppIntro/appintro) [![Pre Merge Checks](https://github.com/AppIntro/AppIntro/workflows/Pre%20Merge%20Checks/badge.svg)](https://github.com/AppIntro/AppIntro/actions?query=workflow%3A%22Pre+Merge+Checks%22) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AppIntro-green.svg?style=flat)](https://android-arsenal.com/details/1/1939) [![Join the chat at https://gitter.im/AppIntro/Lobby](https://badges.gitter.im/AppIntro/Lobby.svg)](https://gitter.im/AppIntro/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
+[![](https://jitpack.io/v/AppIntro/AppIntro.svg)](https://jitpack.io/#AppIntro/appintro) [![Join the chat at https://kotlinlang.slack.com](https://img.shields.io/badge/slack-@kotlinlang/appintro-yellow.svg?logo=slack)](https://kotlinlang.slack.com/archives/C019SH1RMBN) [![Pre Merge Checks](https://github.com/AppIntro/AppIntro/workflows/Pre%20Merge%20Checks/badge.svg)](https://github.com/AppIntro/AppIntro/actions?query=workflow%3A%22Pre+Merge+Checks%22) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AppIntro-green.svg?style=flat)](https://android-arsenal.com/details/1/1939) [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 
 AppIntro is an Android Library that helps you build a **cool carousel intro** for your App. AppIntro has support for **requesting permissions** and helps you create a great onboarding experience in just a couple of minutes.
 
@@ -57,7 +57,7 @@ repositories {
 ```groovy
 dependencies {
     // AndroidX Capable version
-    implementation 'com.github.AppIntro:AppIntro:6.0.0'
+    implementation 'com.github.AppIntro:AppIntro:6.1.0'
     
     // *** OR ***
     
@@ -185,14 +185,11 @@ AppIntro offers several configuration option to help you customize your onboardi
 
 AppIntro comes with a set of _Slide Transformer_ that you can use out of the box to animate your Slide transition.
 
-| Name | Preview |
-| ---: | :-----: |
-| Fade | <img src="assets/fade.gif" alt="fade" width="50%"/> |
-| Zoom | <img src="assets/zoom.gif" alt="zoom" width="50%"/> |
-| Flow | <img src="assets/flow.gif" alt="flow" width="50%"/> |
-| Slide Over | <img src="assets/slideover.gif" alt="slideover" width="50%"/> |
-| Depth | <img src="assets/depth.gif" alt="depth" width="50%"/> |
-| Parallax | <img src="assets/parallax.gif" alt="parallax" width="50%"/> |
+| Slide Transformers | Slide Transformers |
+| :---: | :---: |
+| Fade<br/><img src="assets/fade.gif" alt="fade" width="50%"/> | Zoom<br/><img src="assets/zoom.gif" alt="zoom" width="50%"/> |
+| Flow<br/><img src="assets/flow.gif" alt="flow" width="50%"/> | Slide Over<br/><img src="assets/slideover.gif" alt="slideover" width="50%"/> |
+| Depth<br/><img src="assets/depth.gif" alt="depth" width="50%"/> | Parallax<br/><img src="assets/parallax.gif" alt="parallax" width="50%"/> |
 
 You can simply call `setTransformer()` and pass one of the subclass of the sealed class `AppIntroPageTransformerType`: 
 
@@ -346,7 +343,7 @@ setImmersiveMode()
 
 ### System Back button
 
-You can lock the System Back button if you don't want your user go bo back from intro.
+You can lock the System Back button if you don't want your user to go back from intro.
 This could be useful if you need to request permission and the Intro experience is not optional.
 
 If this is the case, please set to true the following flag:
@@ -392,16 +389,19 @@ Please note that:
 ```kotlin
 // Ask for required CAMERA permission on the second slide. 
 askForPermissions(
-    permissions = arrayOf(Manifest.permission.CAMER),
+    permissions = arrayOf(Manifest.permission.CAMERA),
     slideNumber = 2, 
     required = true)
 
 // Ask for both optional ACCESS_FINE_LOCATION and WRITE_EXTERNAL_STORAGE
 // permission on the third slide.
 askForPermissions(
-    permissions = arrayOf(Manifest.permission.CAMER),
-    slideNumber = 2, 
-    required = true)
+    permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    ),
+    slideNumber = 3, 
+    required = false)
 ```
 
 Should you need further control on the permission request, you can override those two methods on the `AppIntro` class:
@@ -439,9 +439,13 @@ class MyFragment : Fragment(), SlidePolicy {
 }
 ```
 
+You can find a full working example of `SlidePolicy` in the [example app - CustomSlidePolicyFragment.kt](example/src/main/java/com/github/appintro/example/ui/custom/fragments/CustomSlidePolicyFragment.kt)
+
 ## Example App 💡
 
 AppIntro comes with a **sample app** full of examples and use case that you can use as inspiration for your project. You can find it inside the [/example folder](https://github.com/AppIntro/AppIntro/tree/master/example).
+
+You can get a **debug APK** of the sample app from the **Pre Merge** Github Actions job as an [output artifact here](https://github.com/AppIntro/AppIntro/actions?query=workflow%3A%22Pre+Merge+Checks%22).
 
 <p align="center">
     <img src="assets/sample-app.png" alt="appintro sample app" width="40%"/>
@@ -491,7 +495,7 @@ dependencies {
 
 ## Contributing 🤝
 
-We're offering support for [AppIntro on Gitter](https://gitter.im/AppIntro/Lobby). Come and join the conversation over there.
+We're offering support for AppIntro on the [#appintro channel on KotlinLang Slack](https://kotlinlang.slack.com/archives/C019SH1RMBN). Come and join the conversation over there. If you don't have access to KotlinLang Slack, you can [request access here](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up).
 
 **We're looking for contributors! Don't be shy.** 👍 Feel free to open issues/pull requests to help me improve this project.
 
@@ -540,9 +544,6 @@ If you are using AppIntro in your app and would like to be listed here, please o
 <details>
   <summary>List of Apps using AppIntro</summary>
 
-* [Audio Reminder Pro](https://play.google.com/store/apps/details?id=com.brandon.audioreminderpro)
-* [Wizr Daily Quotes](https://play.google.com/store/apps/details?id=com.wizrapp)
-* [Planets](https://play.google.com/store/apps/details?id=com.andrewq.planets)
 * [PDF Me](https://play.google.com/store/apps/details?id=com.pdfme)
 * [Smoothie Recipes](https://play.google.com/store/apps/details?id=com.skykonig.smoothierecipes)
 * [neutriNote](https://play.google.com/store/apps/details?id=com.appmindlab.nano)
@@ -557,7 +558,6 @@ If you are using AppIntro in your app and would like to be listed here, please o
 * [Xpaper - Moto X Wallpapers](https://play.google.com/store/apps/details?id=com.dunrite.xpaper)
 * [Find My Parked Car](https://play.google.com/store/apps/details?id=com.ofirmiron.findmycarandroidwear)
 * [Vape Tool Pro](https://play.google.com/store/apps/details?id=com.stasbar.vapetoolpro)
-* [sdiwi | Win your purchase!](https://play.google.com/store/apps/details?id=com.sdiwi.app)
 * [Schematiskt Skolschema](https://play.google.com/store/apps/details?id=se.zinokader.schematiskt)
 * [Third Eye](https://play.google.com/store/apps/details?id=com.miragestacks.thirdeye)
 * [Web Video Cast](https://play.google.com/store/apps/details?id=com.instantbits.cast.webvideo)
@@ -575,5 +575,16 @@ If you are using AppIntro in your app and would like to be listed here, please o
 * [Best Quotes & Status 2019 (99000+ Collection)](https://play.google.com/store/apps/details?id=com.swastik.quotesandstatus&hl=en_IN)
 * [Orbot](https://play.google.com/store/apps/details?id=org.torproject.android)
 * [PhotoGuard Photo Vault](https://play.google.com/store/apps/details?id=com.photovault.photoguard)
+* [Ride My Park - Best Spots, Skateparks Map](https://play.google.com/store/apps/details?id=com.andrieutom.rmp)
+* [Shopping list](https://play.google.com/store/apps/details?id=de.vanse.shoppinglist) and [Shopping list pro](https://play.google.com/store/apps/details?id=de.vanse.shoppinglist.pro)
+* [PZPIC - Pan & Zoom Effect Video from Still Picture](https://play.google.com/store/apps/details?id=com.photo3dlab.pzpic)
+* [PrezziBenzina](https://play.google.com/store/apps/details?id=org.vernazza.androidfuel&hl=it)
+* [LogViewer for openHAB](https://github.com/cyb3rko/logviewer-for-openhab-app)
+* [Firmo con CIE](https://play.google.com/store/apps/details?id=com.cyberneid.disigoncie)
+* [FoodTable](https://play.google.com/store/apps/details?id=at.foodtable.app)
+* [iC-YOURLS](https://play.google.com/store/apps/details?id=net.inscomers.yourls)
+* [Secure File Manager](https://play.google.com/store/apps/details?id=com.securefilemanager.app)
+* [Noon Happen](https://play.google.com/store/apps/details?id=com.noonhappen.noonhappen)
+* [Alcapote](https://play.google.com/store/apps/details?id=com.casaconnex.alcapote)
 
 </details>

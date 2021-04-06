@@ -1,5 +1,6 @@
 package com.github.appintro.internal
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -12,28 +13,18 @@ import com.github.appintro.internal.viewpager.ViewPagerTransformer
 import kotlin.math.max
 
 /**
- * Class that controls the [AppIntro] of AppIntro.
+ * Class that controls the [ViewPager] of AppIntro.
  * This is responsible of handling of paging, managing touch and dispatching events.
  *
  * @property isFullPagingEnabled Enable or disable swiping at all.
  * @property isPermissionSlide If the current slide has permissions.
- * @property lockPage Set the page where the lock happened.
  * @property onNextPageRequestedListener Listener for Next Page events.
- * @property isNextPagingEnabled Enable or disable swiping to the next page.
  */
 internal class AppIntroViewPager(context: Context, attrs: AttributeSet) : ViewPager(context, attrs) {
 
     var isFullPagingEnabled = true
     var isPermissionSlide = false
-    var lockPage = 0
     var onNextPageRequestedListener: AppIntroViewPagerListener? = null
-    var isNextPagingEnabled: Boolean = true
-        set(value) {
-            field = value
-            if (!value) {
-                lockPage = currentItem
-            }
-        }
 
     private var currentTouchDownX: Float = 0.toFloat()
     private var currentTouchDownY: Float = 0.toFloat()
@@ -125,6 +116,7 @@ internal class AppIntroViewPager(context: Context, attrs: AttributeSet) : ViewPa
         return super.onInterceptTouchEvent(event)
     }
 
+    @SuppressLint("ClickableViewAccessibility") // performClick is called inside handleTouchEvent
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!handleTouchEvent(event)) {
             return false
@@ -164,7 +156,7 @@ internal class AppIntroViewPager(context: Context, attrs: AttributeSet) : ViewPa
                 if (isSwipeForward(currentTouchDownX, event.x)) {
                     val canRequestNextPage = onNextPageRequestedListener?.onCanRequestNextPage() ?: true
                     if (!canRequestNextPage) {
-                        if (userIllegallyRequestNextPage(event)) {
+                        if (userIllegallyRequestNextPage()) {
                             onNextPageRequestedListener?.onIllegallyRequestedNextPage()
                         }
                         return false
@@ -191,7 +183,7 @@ internal class AppIntroViewPager(context: Context, attrs: AttributeSet) : ViewPa
     /**
      * Util function to throttle illegallyRequestedNext to max one request per second.
      */
-    private fun userIllegallyRequestNextPage(event: MotionEvent): Boolean {
+    private fun userIllegallyRequestNextPage(): Boolean {
         if (System.currentTimeMillis() - illegallyRequestedNextPageLastCalled >=
             ON_ILLEGALLY_REQUESTED_NEXT_PAGE_MAX_INTERVAL
         ) {

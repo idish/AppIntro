@@ -3,7 +3,11 @@ package com.github.appintro.indicator
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ProgressBar
+import com.github.appintro.internal.LayoutUtil
+
+internal const val DEFAULT_COLOR = 1
 
 /**
  * An [IndicatorController] that shows a [ProgressBar] for express the number of
@@ -33,10 +37,18 @@ class ProgressIndicatorController @JvmOverloads constructor(
 
     override fun initialize(slideCount: Int) {
         this.max = slideCount
+        if (isRtl) {
+            this.scaleX = -1F
+        }
+        if (slideCount == 1) {
+            this.visibility = View.INVISIBLE
+        }
         selectPosition(0)
     }
 
     override fun selectPosition(index: Int) {
-        this.progress = index + 1
+        this.progress = if (isRtl) { max - index } else { index + 1 }
     }
+
+    private val isRtl: Boolean get() = LayoutUtil.isRtl(this.context)
 }

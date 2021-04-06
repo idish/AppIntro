@@ -53,6 +53,7 @@ class DefaultIntro2 : AppIntro2() {
                 backgroundDrawable = R.drawable.back_slide5
         ))
 
+
         setTransformer(AppIntroPageTransformerType.Parallax())
     }
 
