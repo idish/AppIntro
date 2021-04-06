@@ -2,6 +2,7 @@
 <resources>
     <dimen name="appintro_statusbar_height">24dp</dimen>
 
+    <dimen name="appintro_bottombar_actually_needed_margin">36dp</dimen>
     <dimen name="appintro_bottombar_height">70dp</dimen>
     <dimen name="appintro2_bottombar_height">90dp</dimen>
 
