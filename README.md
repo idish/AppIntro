@@ -11,6 +11,7 @@ AppIntro is an Android Library that helps you build a **cool carousel intro** fo
   * [Getting Started <g-emoji class="g-emoji" alias="footprints" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f463.png">👣</g-emoji>](#getting-started-)
      * [Adding a dependency](#adding-a-dependency)
      * [Basic usage](#basic-usage)
+     * [Java users](#java-users)
   * [Migrating <g-emoji class="g-emoji" alias="car" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f697.png">🚗</g-emoji>](#migrating-)
   * [Features <g-emoji class="g-emoji" alias="toolbox" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f9f0.png">🧰</g-emoji>](#features-)
   * [Creating Slides <g-emoji class="g-emoji" alias="woman_artist" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f469-1f3a8.png">👩‍🎨</g-emoji>](#creating-slides-)
@@ -57,7 +58,7 @@ repositories {
 ```groovy
 dependencies {
     // AndroidX Capable version
-    implementation 'com.github.AppIntro:AppIntro:6.1.0'
+    implementation 'com.github.AppIntro:AppIntro:6.2.0'
     
     // *** OR ***
     
@@ -80,11 +81,11 @@ class MyCustomAppIntro : AppIntro() {
 
         // Call addSlide passing your Fragments.
         // You can use AppIntroFragment to use a pre-built fragment
-        addSlide(AppIntroFragment.newInstance(
+        addSlide(AppIntroFragment.createInstance(
                 title = "Welcome...",
                 description = "This is the first slide of the example"
         ))
-        addSlide(AppIntroFragment.newInstance(
+        addSlide(AppIntroFragment.createInstance(
                 title = "...Let's get started!",
                 description = "This is the last slide, I won't annoy you more :)"
         ))
@@ -106,6 +107,8 @@ class MyCustomAppIntro : AppIntro() {
 
 Please note that you **must NOT call** setContentView. The `AppIntro` superclass is taking care of it for you.
 
+Also confirm that you're overriding `onCreate` with **a single parameter** (`Bundle`) and you're not using another override (like `onCreate(Bundle, PersistableBundle)`) instead.
+
 Finally, declare the activity in your Manifest like so:
 
 ``` xml
@@ -114,6 +117,10 @@ Finally, declare the activity in your Manifest like so:
 ```
 
 We suggest to don't declare `MyCustomAppIntro` as your first Activity unless you want the intro to launch every time your app starts. Ideally you should show the AppIntro activity only once to the user, and you should hide it once completed (you can use a flag in the `SharedPreferences`).
+
+### Java users
+
+You can find many examples in java language in the [examples directory](example/src/main/java/com/github/appintro/example/ui/java/JavaIntro.java)
 
 ## Migrating 🚗
 
@@ -143,14 +150,14 @@ You can use the `AppIntroFragment` if you just want to customize title, descript
 That's the suggested approach if you want to create a quick intro:
 
 ```kotlin
-addSlide(AppIntroFragment.newInstance(
+addSlide(AppIntroFragment.createInstance(
     title = "The title of your slide",
     description = "A description that will be shown on the bottom",
     imageDrawable = R.drawable.the_central_icon,
     backgroundDrawable = R.drawable.the_background_image,
-    titleColor = Color.YELLOW,
-    descriptionColor = Color.RED,
-    backgroundColor = Color.BLUE,
+    titleColorRes = R.color.yellow,
+    descriptionColorRes = R.color.red,
+    backgroundColorRes = R.color.blue,
     titleTypefaceFontRes = R.font.opensans_regular,
     descriptionTypefaceFontRes = R.font.opensans_regular,
 ))
@@ -159,7 +166,7 @@ addSlide(AppIntroFragment.newInstance(
 All the parameters are optional, so you're free to customize your slide as you wish.
 
 If you need to programmatically create several slides you can also use the `SliderPage` class.
-This class can be passed to `AppIntroFragment.newInstance(sliderPage: SliderPage)` that will create
+This class can be passed to `AppIntroFragment.createInstance(sliderPage: SliderPage)` that will create
 a new slide starting from that instance.
 
 ### `AppIntroCustomLayoutFragment`
@@ -443,9 +450,9 @@ You can find a full working example of `SlidePolicy` in the [example app - Custo
 
 ## Example App 💡
 
-AppIntro comes with a **sample app** full of examples and use case that you can use as inspiration for your project. You can find it inside the [/example folder](https://github.com/AppIntro/AppIntro/tree/master/example).
+AppIntro comes with a **sample app** full of examples and use case that you can use as inspiration for your project. You can find it inside the [/example folder](https://github.com/AppIntro/AppIntro/tree/main/example).
 
-You can get a **debug APK** of the sample app from the **Pre Merge** Github Actions job as an [output artifact here](https://github.com/AppIntro/AppIntro/actions?query=workflow%3A%22Pre+Merge+Checks%22).
+You can get a **debug APK** of the sample app from the **Pre Merge** GitHub Actions job as an [output artifact here](https://github.com/AppIntro/AppIntro/actions?query=workflow%3A%22Pre+Merge+Checks%22).
 
 <p align="center">
     <img src="assets/sample-app.png" alt="appintro sample app" width="40%"/>
@@ -477,7 +484,7 @@ If a translation in your language is already available, please check it and even
 
 ## Snapshots 📦
 
-Development of AppIntro happens on the [master](https://github.com/AppIntro/AppIntro/tree/master) branch. You can get `SNAPSHOT` versions directly from JitPack if needed.
+Development of AppIntro happens on the [main](https://github.com/AppIntro/AppIntro/tree/main) branch. You can get `SNAPSHOT` versions directly from JitPack if needed.
 
 ```gradle
 repositories {
@@ -487,7 +494,7 @@ repositories {
 
 ```gradle
 dependencies {
-  implementation "com.github.AppIntro:AppIntro:master-SNAPSHOT"
+  implementation "com.github.AppIntro:AppIntro:main-SNAPSHOT"
 }
 ```
 
@@ -506,7 +513,7 @@ We're offering support for AppIntro on the [#appintro channel on KotlinLang Slac
 
 ### Maintainers
 
-AppIntro is currently developed and maintained by the [AppIntro Github Org](https://github.com/AppIntro). When submitting a new PR, please ping one of:
+AppIntro is currently developed and maintained by the [AppIntro GitHub Org](https://github.com/AppIntro). When submitting a new PR, please ping one of:
 
 - [@paolorotolo](https://github.com/paolorotolo)
 - [@cortinico](https://github.com/cortinico)
@@ -581,10 +588,12 @@ If you are using AppIntro in your app and would like to be listed here, please o
 * [PrezziBenzina](https://play.google.com/store/apps/details?id=org.vernazza.androidfuel&hl=it)
 * [LogViewer for openHAB](https://github.com/cyb3rko/logviewer-for-openhab-app)
 * [Firmo con CIE](https://play.google.com/store/apps/details?id=com.cyberneid.disigoncie)
-* [FoodTable](https://play.google.com/store/apps/details?id=at.foodtable.app)
 * [iC-YOURLS](https://play.google.com/store/apps/details?id=net.inscomers.yourls)
 * [Secure File Manager](https://play.google.com/store/apps/details?id=com.securefilemanager.app)
 * [Noon Happen](https://play.google.com/store/apps/details?id=com.noonhappen.noonhappen)
 * [Alcapote](https://play.google.com/store/apps/details?id=com.casaconnex.alcapote)
-
+* [Weather Forecast](https://play.google.com/store/apps/details?id=com.ehlb.weatherapp)
+* [Zoned Pomodoro Timer](https://play.google.com/store/apps/details?id=com.just.five)
+    
+    
 </details>

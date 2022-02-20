@@ -99,6 +99,11 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
      * */
     protected var isVibrate = false
 
+    /**
+     * Read-only property with the total number of slides for this AppIntro.
+     */
+    protected val totalSlidesNumber: Int get() = slidesNumber
+
     // Private Fields
 
     private lateinit var pagerAdapter: PagerAdapter
@@ -178,6 +183,7 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
     }
 
     /** Moves the AppIntro to the next slide */
+    @JvmOverloads
     protected fun goToNextSlide(isLastSlide: Boolean = pager.isLastSlide(fragments.size)) {
         if (isLastSlide) {
             onIntroFinished()
@@ -250,6 +256,7 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
         ReplaceWith("setSwipeLock"),
         DeprecationLevel.ERROR
     )
+    @Suppress("UnusedPrivateMember")
     protected fun setNextPageSwipeLock(lock: Boolean) {
         LogHelper.w(
             TAG,
@@ -483,7 +490,13 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
             putBoolean(ARG_BUNDLE_IS_SKIP_BUTTON_ENABLED, isSkipButtonEnabled)
             putBoolean(ARG_BUNDLE_IS_INDICATOR_ENABLED, isIndicatorEnabled)
 
-            putInt(ARG_BUNDLE_CURRENT_ITEM, pager.currentItem)
+            // We can't use pager.currentItem as we need the current item that is RTL-invariant.
+            val currentItem = if (isRtl) {
+                fragments.size - pager.currentItem
+            } else {
+                pager.currentItem
+            }
+            putInt(ARG_BUNDLE_CURRENT_ITEM, currentItem)
             putBoolean(ARG_BUNDLE_IS_FULL_PAGING_ENABLED, pager.isFullPagingEnabled)
 
             putSerializable(ARG_BUNDLE_PERMISSION_MAP, permissionsMap)
@@ -714,8 +727,8 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
             if (currentSlide.isAdded && nextSlide.isAdded) {
                 val newColor = argbEvaluator.evaluate(
                     positionOffset,
-                    currentSlide.defaultBackgroundColor,
-                    nextSlide.defaultBackgroundColor
+                    getSlideColor(currentSlide),
+                    getSlideColor(nextSlide)
                 ) as Int
                 currentSlide.setBackgroundColor(newColor)
                 nextSlide.setBackgroundColor(newColor)
@@ -723,6 +736,16 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
         } else {
             error("Color transitions are only available if all slides implement SlideBackgroundColorHolder.")
         }
+    }
+
+    @ColorInt
+    @Suppress("DEPRECATION")
+    private fun getSlideColor(slide: SlideBackgroundColorHolder): Int {
+        if (slide.defaultBackgroundColorRes != 0) {
+            return ContextCompat.getColor(this, slide.defaultBackgroundColorRes)
+        }
+
+        return slide.defaultBackgroundColor
     }
 
     /**
@@ -790,7 +813,9 @@ abstract class AppIntroBase : AppCompatActivity(), AppIntroViewPagerListener {
             currentlySelectedItem = position
         }
 
-        override fun onPageScrollStateChanged(state: Int) {}
+        override fun onPageScrollStateChanged(state: Int) {
+            // no-op
+        }
     }
 
     private companion object {

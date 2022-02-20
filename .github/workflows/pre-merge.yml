@@ -2,7 +2,7 @@ name: Pre Merge Checks
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     branches:
       - '*'
@@ -16,13 +16,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache Gradle Folders
-        uses: actions/cache@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck
@@ -35,13 +34,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache Gradle Folders
-        uses: actions/cache@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Run detekt
         run: ./gradlew detekt
@@ -54,13 +52,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache Gradle Folders
-        uses: actions/cache@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Run lint
         run: ./gradlew lint
@@ -73,13 +70,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache Gradle Folders
-        uses: actions/cache@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Run all the tests
         run: ./gradlew test
@@ -93,12 +89,15 @@ jobs:
         experimental: [false]
         name: ["stable"]
         include:
-          - agp: 4.2.+
+          - agp: 7.1.0-beta02
             experimental: true
-            name: AGP-4.2.+
-          - kotlin: 1.4.30+
+            name: AGP-7.1.+
+          - agp: 7.2.0-alpha03
             experimental: true
-            name: kotlin-EAP-1.4.30+
+            name: AGP-7.2.+
+          - kotlin: 1.6.0-RC
+            experimental: true
+            name: Kotlin-EAP
 
     runs-on: [ubuntu-latest]
     continue-on-error: ${{ matrix.experimental }}
@@ -112,13 +111,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache Gradle Folders
-        uses: actions/cache@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Build the Debug APK
         run: ./gradlew assembleDebug
